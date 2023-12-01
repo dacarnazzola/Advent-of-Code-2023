@@ -73,60 +73,51 @@ private
             else
                 buffer_len = len(buffer)
                 if (buffer_len >= 5) then
-                    select case (buffer(1:3))
-                        case (one)
-                            value_as_character = '1'
-                        case (two)
-                            value_as_character = '2'
-                        case (six)
-                            value_as_character = '6'
-                    end select
-                    select case (buffer(1:4))
-                        case (zero)
-                            value_as_character = '0'
-                        case (four)
-                            value_as_character = '4'
-                        case (five)
-                            value_as_character = '5'
-                        case (nine)
-                            value_as_character = '9'
-                    end select
-                    select case (buffer(1:5))
-                        case (three)
-                            value_as_character = '3'
-                        case (seven)
-                            value_as_character = '7'
-                        case (eight)
-                            value_as_character = '8'
-                    end select
+                    if (buffer(1:4) == zero) then
+                        value_as_character = '0'
+                    else if (buffer(1:3) == one) then
+                        value_as_character = '1'
+                    else if (buffer(1:3) == two) then
+                        value_as_character = '2'
+                    else if (buffer(1:5) == three) then
+                        value_as_character = '3'
+                    else if (buffer(1:4) == four) then
+                        value_as_character = '4'
+                    else if (buffer(1:4) == five) then
+                        value_as_character = '5'
+                    else if (buffer(1:3) == six) then
+                        value_as_character = '6'
+                    else if (buffer(1:5) == seven) then
+                        value_as_character = '7'
+                    else if (buffer(1:5) == eight) then
+                        value_as_character = '8'
+                    else if (buffer(1:4) == nine) then
+                        value_as_character = '9'
+                    end if
                 else if (buffer_len >= 4) then
-                    select case (buffer(1:3))
-                        case (one)
-                            value_as_character = '1'
-                        case (two)
-                            value_as_character = '2'
-                        case (six)
-                            value_as_character = '6'
-                    end select
-                    select case (buffer(1:4))
-                        case (zero)
-                            value_as_character = '0'
-                        case (four)
-                            value_as_character = '4'
-                        case (five)
-                            value_as_character = '5'
-                        case (nine)
-                            value_as_character = '9'
-                    end select
+                    if (buffer(1:4) == zero) then
+                        value_as_character = '0'
+                    else if (buffer(1:3) == one) then
+                        value_as_character = '1'
+                    else if (buffer(1:3) == two) then
+                        value_as_character = '2'
+                    else if (buffer(1:4) == four) then
+                        value_as_character = '4'
+                    else if (buffer(1:4) == five) then
+                        value_as_character = '5'
+                    else if (buffer(1:3) == six) then
+                        value_as_character = '6'
+                    else if (buffer(1:4) == nine) then
+                        value_as_character = '9'
+                    end if
                 else if (buffer_len >= 3) then
-                    select case (buffer(1:3))
-                        case (one)
-                            value_as_character = '1'
-                        case (two)
-                            value_as_character = '2'
-                        case (six)
-                            value_as_character = '6'
-                    end select
+                    if (buffer(1:3) == one) then
+                        value_as_character = '1'
+                    else if (buffer(1:3) == two) then
+                        value_as_character = '2'
+                    else if (buffer(1:3) == six) then
+                        value_as_character = '6'
+                    end if
                 end if
             end if
             is_valid = value_as_character /= ''
