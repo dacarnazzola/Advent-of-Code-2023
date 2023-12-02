@@ -2,7 +2,7 @@ module day_02
 implicit none
 private
 
-    integer, parameter :: max_r = 12, max_g = 13, max_b = 14
+    integer, parameter :: limit_rgb(3) = [12, 13, 14]
     character(len=*), parameter :: red = 'red', green = 'green', blue = 'blue'
 
     public :: solve_day_02
@@ -49,9 +49,8 @@ private
             look_for_number = .true.
             look_for_color = .false.
             string_len = 0
-            game_possible = .true.
             min_rgb = 0
-            check_game: do i=semicolon_ii+2,line_len
+            do i=semicolon_ii+2,line_len
                 if (look_for_number) then
                     if ((iachar(line(i:i)) >= 48) .and. (iachar(line(i:i)) <= 57)) then
                         string_len = string_len + 1
@@ -69,30 +68,31 @@ private
                     else if ((string_len > 0) .and. ((line(i:i) == ' ') .or. (line(i:i) == ';') .or. (line(i:i) == ','))) then
                         if (string(1:string_len) == red) then
                             min_rgb(1) = max(num_balls, min_rgb(1))
-                            if (num_balls > max_r) game_possible = .false.
                         else if (string(1:string_len) == green) then
                             min_rgb(2) = max(num_balls, min_rgb(2))
-                            if (num_balls > max_g) game_possible = .false.
                         else if (string(1:string_len) == blue) then
                             min_rgb(3) = max(num_balls, min_rgb(3))
-                            if (num_balls > max_b) game_possible = .false.
                         end if
                         look_for_number = .true.
                         look_for_color = .false.
                         string_len = 0
                     end if
                 end if
-            end do check_game
+            end do
             if (string(1:string_len) == red) then
                 min_rgb(1) = max(num_balls, min_rgb(1))
-                if (num_balls > max_r) game_possible = .false.
             else if (string(1:string_len) == green) then
                 min_rgb(2) = max(num_balls, min_rgb(2))
-                if (num_balls > max_g) game_possible = .false.
             else if (string(1:string_len) == blue) then
                 min_rgb(3) = max(num_balls, min_rgb(3))
-                if (num_balls > max_b) game_possible = .false.
             end if
+            game_possible = .true.
+            check_game: do i=1,3
+                if (min_rgb(i) > limit_rgb(i)) then
+                    game_possible = .false.
+                    exit check_game
+                end if
+            end do check_game
             game_power = min_rgb(1)*min_rgb(2)*min_rgb(3)
         end subroutine parse_line
 
