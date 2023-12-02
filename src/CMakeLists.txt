@@ -1,6 +1,7 @@
 # explicitly name all files in src/ directory
 set(MODULE_FILES 
     day_01.f90
+    day_02.f90
    )
 
 # compile source files to lib_modules
