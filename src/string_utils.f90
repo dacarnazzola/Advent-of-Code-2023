@@ -4,18 +4,11 @@ private
 
     type string
         character(len=:), allocatable :: s
-        contains
-            final :: destroy_string
     end type string
 
     public :: string, split
 
     contains
-
-        pure elemental subroutine destroy_string(self)
-            type(string), intent(inout) :: self
-            if (allocated(self%s)) deallocate(self%s)
-        end subroutine destroy_string
 
         pure subroutine split(input, delimiter, output)
             character(len=*), intent(in) :: input
