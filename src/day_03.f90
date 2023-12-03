@@ -73,28 +73,26 @@ private
         pure function valid_gear_ratio(check_rows, j_gear) result(num_out)
             character(len=input_line_len+2), intent(in) :: check_rows(3)
             integer, intent(in) :: j_gear
-            integer :: num_out, start_ii, stop_ii, numbers(2)
+            integer :: num_out, stop_ii, numbers(2)
             num_out = 0
             numbers = -1
             stop_ii = -1
             !! check top left corner
             if (is_number(check_rows(1)((j_gear-1):(j_gear-1)))) call number_in_line_info(check_rows(1), &
                                                                                           j_gear-1, &
-                                                                                          start_ii, &
                                                                                           stop_ii, &
                                                                                           numbers(1))
             !! if no number in top left corner, there may be in top middle
             if ((numbers(1) < 0) .and. is_number(check_rows(1)(j_gear:j_gear))) call number_in_line_info(check_rows(1), &
                                                                                                          j_gear, &
-                                                                                                         start_ii, &
                                                                                                          stop_ii, &
                                                                                                          numbers(1))
             !! numbers could be in top left or middle, check top right and make sure stop_ii < j_gear (1 left from top right)
             if ((stop_ii < j_gear) .and. is_number(check_rows(1)((j_gear+1):(j_gear+1)))) then
                 if (numbers(1) < 0) then
-                    call number_in_line_info(check_rows(1)((j_gear+1):), 1, start_ii, stop_ii, numbers(1))
+                    call number_in_line_info(check_rows(1)((j_gear+1):), 1, stop_ii, numbers(1))
                 else if (numbers(2) < 0) then
-                    call number_in_line_info(check_rows(1)((j_gear+1):), 1, start_ii, stop_ii, numbers(2))
+                    call number_in_line_info(check_rows(1)((j_gear+1):), 1, stop_ii, numbers(2))
                 else
                     error stop 'shouldn''t ever get here... top right'
                 end if
@@ -104,9 +102,9 @@ private
                 if (numbers(2) > -1) then
                     return !! early return, but there must be EXACTLY two adjacent numbers for a gear ratio
                 else if (numbers(1) < 0) then
-                    call number_in_line_info(check_rows(2)(1:(j_gear-1)), j_gear - 1, start_ii, stop_ii, numbers(1))
+                    call number_in_line_info(check_rows(2)(1:(j_gear-1)), j_gear - 1, stop_ii, numbers(1))
                 else if (numbers(2) < 0) then
-                    call number_in_line_info(check_rows(2)(1:(j_gear-1)), j_gear - 1, start_ii, stop_ii, numbers(2))
+                    call number_in_line_info(check_rows(2)(1:(j_gear-1)), j_gear - 1, stop_ii, numbers(2))
                 else
                     error stop 'shouldn''t ever get here... middle left'
                 end if
@@ -116,9 +114,9 @@ private
                 if (numbers(2) > -1) then
                     return !! early return, but there must be EXACTLY two adjacent numbers for a gear ratio
                 else if (numbers(1) < 0) then
-                    call number_in_line_info(check_rows(2)((j_gear+1):), 1, start_ii, stop_ii, numbers(1))
+                    call number_in_line_info(check_rows(2)((j_gear+1):), 1, stop_ii, numbers(1))
                 else if (numbers(2) < 0) then
-                    call number_in_line_info(check_rows(2)((j_gear+1):), 1, start_ii, stop_ii, numbers(2))
+                    call number_in_line_info(check_rows(2)((j_gear+1):), 1, stop_ii, numbers(2))
                 else
                     error stop 'shouldn''t ever get here... middle right'
                 end if
@@ -128,9 +126,9 @@ private
                 if (numbers(2) > -1) then
                     return !! early return, but there must be EXACTLY two adjacent numbers for a gear ratio
                 else if (numbers(1) < 0) then
-                    call number_in_line_info(check_rows(3), j_gear - 1, start_ii, stop_ii, numbers(1))
+                    call number_in_line_info(check_rows(3), j_gear - 1, stop_ii, numbers(1))
                 else if (numbers(2) < 0) then
-                    call number_in_line_info(check_rows(3), j_gear - 1, start_ii, stop_ii, numbers(2))
+                    call number_in_line_info(check_rows(3), j_gear - 1, stop_ii, numbers(2))
                 else
                     error stop 'shouldn''t ever get here... bottom left'
                 end if
@@ -140,9 +138,9 @@ private
                 if (numbers(2) > -1) then
                     return !! early return, but there must be EXACTLY two adjacent numbers for a gear ratio
                 else if (numbers(1) < 0) then
-                    call number_in_line_info(check_rows(3), j_gear, start_ii, stop_ii, numbers(1))
+                    call number_in_line_info(check_rows(3), j_gear, stop_ii, numbers(1))
                 else if (numbers(2) < 0) then
-                    call number_in_line_info(check_rows(3), j_gear, start_ii, stop_ii, numbers(2))
+                    call number_in_line_info(check_rows(3), j_gear, stop_ii, numbers(2))
                 else
                     error stop 'shouldn''t ever get here... bottom middle'
                 end if
@@ -152,7 +150,7 @@ private
                 if ((numbers(2) > -1) .or. (numbers(1) < 0)) then
                     return !! early return, but there must be EXACTLY two adjacent numbers for a gear ratio
                 else if (numbers(2) < 0) then
-                    call number_in_line_info(check_rows(3)((j_gear+1):), 1, start_ii, stop_ii, numbers(2))
+                    call number_in_line_info(check_rows(3)((j_gear+1):), 1, stop_ii, numbers(2))
                 else
                     error stop 'shouldn''t ever get here... bottom right'
                 end if
@@ -165,11 +163,11 @@ private
             is_number = (iachar(character_in) >= 48) .and. (iachar(character_in) <= 57)
         end function is_number
 
-        pure subroutine number_in_line_info(line, number_ii, start_ii, stop_ii, num_out)
+        pure subroutine number_in_line_info(line, number_ii, stop_ii, num_out)
             character(len=*), intent(in) :: line
             integer, intent(in) :: number_ii
-            integer, intent(out) :: start_ii, stop_ii, num_out
-            integer :: i
+            integer, intent(out) :: stop_ii, num_out
+            integer :: i, start_ii
             do i=number_ii,1,-1 !! check backwards
                 if (is_number(line(i:i))) then
                     start_ii = i
