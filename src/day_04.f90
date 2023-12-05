@@ -50,11 +50,12 @@ private
             integer, intent(in) :: wins(:)
             integer :: repeats, cards_to_read(size(wins)), i
             cards_to_read = 1
-            do i=1,size(cards_to_read)-1
+            total_wins = 0
+            do i=1,size(cards_to_read)
                 repeats = wins(i)
                 if (repeats > 0) cards_to_read(i+1:i+repeats) = cards_to_read(i+1:i+repeats) + cards_to_read(i)
+                total_wins = total_wins + cards_to_read(i)
             end do
-            total_wins = sum(cards_to_read)
         end function total_wins
 
 end module day_04
