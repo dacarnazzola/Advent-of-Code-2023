@@ -57,21 +57,30 @@ private
             integer, intent(in) :: map_length(:)
             integer(i64), intent(out) :: ans1
             integer :: i, j, k
-            integer(i64) :: input, offset, output
+            integer(i64) :: input, offset, output, r
             ans1 = huge(1_i64)
-            loop_seeds: do i=1,size(seeds)
-                output = seeds(i)
-                loop_maps: do j=1,size(maps, dim=3) !! go through each map
-                    input = output
-                    loop_lines: do k=1,map_length(j)
-                        offset = input - maps(2,k,j)
-                        if ((offset >= 0) .and. (input <= (maps(2,k,j) + maps(3,k,j) - 1_i64))) then
-                            output = maps(1,k,j) + offset
-                            exit loop_lines
-                        end if
-                    end do loop_lines
-                end do loop_maps
-                ans1 = min(ans1, output)
+            loop_seeds: do i=1,size(seeds),2
+                r = 0
+                output = seeds(i) + r
+                do while (output < (seeds(i) + seeds(i+1)))
+                    loop_maps: do j=1,size(maps, dim=3) !! go through each map
+                        input = output
+                        loop_lines: do k=1,map_length(j)
+                            offset = input - maps(2,k,j)
+                            if ((offset >= 0) .and. (input <= (maps(2,k,j) + maps(3,k,j) - 1_i64))) then
+                                output = maps(1,k,j) + offset
+                                exit loop_lines
+                            end if
+                        end do loop_lines
+                    end do loop_maps
+                    if (output < ans1) then
+                        ans1 = output
+                        write(*,*) 'new best: ',ans1
+                    end if
+!                    ans1 = min(ans1, output)
+                    r = r + 1
+                    output = seeds(i) + r
+                end do
             end do loop_seeds
         end subroutine score_seeds
 
