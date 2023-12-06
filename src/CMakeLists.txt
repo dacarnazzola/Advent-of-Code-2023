@@ -6,6 +6,7 @@ set(MODULE_FILES
     day_03.f90
     day_04.f90
     day_05.f90
+    day_06.f90
    )
 
 # compile source files to lib_modules

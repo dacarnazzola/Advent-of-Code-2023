@@ -4,6 +4,7 @@ use, non_intrinsic :: day_02, only: solve_day_02
 use, non_intrinsic :: day_03, only: solve_day_03
 use, non_intrinsic :: day_04, only: solve_day_04
 use, non_intrinsic :: day_05, only: solve_day_05
+use, non_intrinsic :: day_06, only: solve_day_06
 use, intrinsic :: iso_fortran_env, only: int64, real64
 implicit none
 
@@ -29,9 +30,14 @@ implicit none
     call system_clock(c2)
     write(*,'(a,f0.1,a)') 'solved DAY_04 in ',real(max(c2 - c1, 1_int64), real64)/real(cr, real64)*1000.0_real64,' ms'
 
+!    call system_clock(c1, cr)
+!    call solve_day_05('./inputs/day_05_input.txt')
+!    call system_clock(c2)
+!    write(*,'(a,f0.1,a)') 'solved DAY_05 in ',real(max(c2 - c1, 1_int64), real64)/real(cr, real64)*1000.0_real64,' ms'
+
     call system_clock(c1, cr)
-    call solve_day_05('./inputs/day_05_input.txt')
+    call solve_day_06('./inputs/day_06_input.txt')
     call system_clock(c2)
-    write(*,'(a,f0.1,a)') 'solved DAY_05 in ',real(max(c2 - c1, 1_int64), real64)/real(cr, real64)*1000.0_real64,' ms'
+    write(*,'(a,f0.1,a)') 'solved DAY_06 in ',real(max(c2 - c1, 1_int64), real64)/real(cr, real64)*1000.0_real64,' ms'
 
 end program aoc2023
