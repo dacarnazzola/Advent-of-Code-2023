@@ -6,7 +6,7 @@ private
         character(len=:), allocatable :: s
     end type string
 
-    public :: string, split
+    public :: string, split, is_number
 
     contains
 
@@ -59,5 +59,10 @@ private
             end if
             call move_alloc(work, io)
         end subroutine append
+
+        pure logical function is_number(character_in)
+            character(len=1), intent(in) :: character_in
+            is_number = (iachar(character_in) >= 48) .and. (iachar(character_in) <= 57)
+        end function is_number
 
 end module string_utils

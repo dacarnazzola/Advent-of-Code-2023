@@ -30,7 +30,7 @@ private
             end do
             close(fid)
             ans2 = total_wins(wins)
-            write(*,'(a,i0,a,i0)') 'Day 03, part 1: ',ans1,', part 2: ',ans2
+            write(*,'(a,i0,a,i0)') 'Day 04, part 1: ',ans1,', part 2: ',ans2
         end subroutine solve_day_04
 
         pure subroutine score_card(winning_numbers, my_numbers, num_winning_numbers, score)
