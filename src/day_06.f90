@@ -48,8 +48,6 @@ private
             end do
             close(fid)
             !! solve: distance < (time - speed)*speed --> -speed**2 + time*speed - distance > 0
-            write(*,*) times
-            write(*,*) distances
             do i=1,size(times)
                 call find_range(times(i), distances(i), range_count(i))
             end do
@@ -61,13 +59,10 @@ private
         pure subroutine find_range(time, distance, range_count)
             integer(i64), intent(in) :: time, distance
             integer(i64), intent(out) :: range_count
-            integer(i64) :: i
-            real(dp) :: speed
-            range_count = 0_i64
-            do i=1_i64,time-1_i64
-                speed = real(i, dp)
-                if ((-speed**2 + real(time, dp)*speed - real(distance, dp)) > 0.0) range_count = range_count + 1
-            end do
+            real(dp) :: b, c
+            b = real(time, dp)
+            c = real(distance, dp)
+            range_count = floor((-b + sqrt(b**2 - 4.0_dp*c))/2.0_dp) - floor((-b - sqrt(b**2 - 4.0_dp*c))/2.0_dp)
         end subroutine find_range
 
 end module day_06
