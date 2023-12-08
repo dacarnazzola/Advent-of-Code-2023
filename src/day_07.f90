@@ -37,7 +37,6 @@ private
             call score_hands2(hands(1:num_hands), scores(1:num_hands))
             call sort(scores(1:num_hands), ii(1:num_hands))
             do i=1,num_hands
-!                write(*,*) i,hands(ii(i)),scores(i)
                 ans2 = ans2 + i*bets(ii(i))
             end do
             write(*,'(a,i0,a,i0)') 'Day 07, part 1: ',ans1,', part 2: ',ans2
@@ -92,42 +91,66 @@ private
                     score = score + 0.1666_dp/10**(i*2-1)
                 end if
             end do
-            if (maxval(c) + jokers == 5) then !! 5 of a kind
-                score = score + 7.0_dp
-            else if (maxval(c) + jokers == 4) then !! 4 of a kind
-                score = score + 6.0_dp
-            else if (maxval(c) + jokers == 3) then !! full house or 3 of a kind
-                if ((jokers == 0) .or. (jokers == 2)) then
-                    score = score + 5.0_dp !! full house
-                else if (jokers == 1) then
-                    if (count(c == 2) == 2) then !! full house, joker converts 2 pair
+            select case (jokers)
+                case (0)
+                    if (any(c == 5)) then !! 5 of a kind
+                        score = score + 7.0_dp
+                    else if (any(c == 4)) then !! 4 of a kind
+                        score = score + 6.0_dp
+                    else if (any(c == 3) .and. any(c == 2)) then !! full house
                         score = score + 5.0_dp
-                    else
-                        score = score + 4.0_dp !! maxval + jokers == 3, but no 2 pair
+                    else if (any(c == 3)) then !! 3 of a kind
+                        score = score + 4.0_dp
+                    else if (count(c == 2) == 2) then !! 2 pair
+                        score = score + 3.0_dp
+                    else if (any(c == 2)) then !! 1 pair
+                        score = score + 2.0_dp
+                    else !! high card
+                        score = score + 1.0_dp
                     end if
-                else
-                    error stop 'in maxval 3 block...'
-                end if
-                write(*,*) hand, score
-            else if (maxval(c) + jokers == 2) then !! 2 pair or 1 pair
-                if (jokers == 0) then
-                    if (count(c == 2) == 2) then
-                        score = score + 3.0_dp !! 2 pair
-                    else
-                        score = score + 2.0_dp !! 1 pair
+                case (1)
+                    if (any(c == 4)) then !! 4 of a kind promoted
+                        score = score + 7.0_dp
+                    else if (any(c == 3)) then !! 3 of a kind promoted
+                        score = score + 6.0_dp
+                    else if (count(c == 2) == 2) then !! two pair promoted
+                        score = score + 5.0_dp
+                    else if (any(c == 2)) then !! 1 pair promoted
+                        score = score + 4.0_dp
+                    else if (count(c == 2) == 1) then !! 1 pair
+                        score = score + 3.0_dp
+                    else if (maxval(c) == 1) then !! high card promoted
+                        score = score + 2.0_dp
+                    else !! high card
+                        error stop 'should all be caught in 1 joker...'
                     end if
-                else if (jokers == 1) then
-                    score = score + 2.0_dp !! 1 pair
-                else
-                    error stop 'in maxval 2 block...'
-                end if
-                write(*,*) hand, score
-            else !! high card
-                score = score + 1.0_dp
-            end if
-!            if (jokers > 1) then
-!                write(*,*) hand, score
-!            end if
+                case (2)
+                    if (any(c == 3)) then !! 3 of a kind promoted
+                        score = score + 7.0_dp
+                    else if (any(c == 2)) then !! 2 of a kind promoted
+                        score = score + 6.0_dp
+                    else if (count(c == 2) == 2) then !! 2 jokers and 1 other pair, 1 loose --> 3 of a kind + 2 of a kind
+                        score = score + 5.0_dp
+                    else if (maxval(c) == 1) then !! 2 jokers + 3 loose --> three of a kind
+                        score = score + 4.0_dp
+                    else
+                        error stop 'should all be caught in 2 jokers'
+                    end if 
+                case (3)
+                    if (any(c == 2)) then !! pair promoted to 5 of a kind
+                        score = score + 7.0_dp
+                    else if (maxval(c) == 1) then !! 3 jokers + 2 loose --> 4 of a kind
+                        score = score + 6.0_dp
+                    else
+                        error stop 'should all be caught 3 jokers...'
+                    end if
+                case (4)
+                    score = score + 7.0_dp
+                case (5)
+                    score = score + 7.0_dp
+                case default
+                    error stop 'jokers < 0 or jokers > 5'
+            end select
         end subroutine score_hands2
 
         pure elemental subroutine score_hands(hand, score)
